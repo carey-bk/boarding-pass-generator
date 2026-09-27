@@ -1,14 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {
+import ZXing from "@zxing/library";
+import { buildBcbp } from "../src/bcbp.js";
+import { createBcbpBarcode } from "../src/barcode.js";
+
+// ZXing ships CommonJS: destructure its default export for Node 20/22 as well.
+const {
   AztecCodeReader,
   QRCodeReader,
   BinaryBitmap,
   HybridBinarizer,
   RGBLuminanceSource,
-} from "@zxing/library";
-import { buildBcbp } from "../src/bcbp.js";
-import { createBcbpBarcode } from "../src/barcode.js";
+} = ZXing;
 
 const sample = {
   passengerName: "Peter/Parker", fromCode: "NKG", toCode: "SYD",
