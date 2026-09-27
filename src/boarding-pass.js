@@ -1,5 +1,3 @@
-import { createBcbpQr } from "./qr.js";
-
 const logoUrl = new URL("./assets/umetrip-logo.png", import.meta.url).href;
 const PASS_FONT =
   'system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif';
@@ -109,29 +107,23 @@ function drawPlane(ctx, x, y) {
   ctx.restore();
 }
 
-function drawQr(ctx, payload, centerX, top, maxSize) {
-  // Version 7 is a 45×45 symbol. Its alignment grid leaves six visible
-  // small square patterns, matching the QR structure in demo.jpg.
-  const qr = createBcbpQr(payload);
-  const quietModules = 4;
-  const modulesAcross = qr.modules.size + quietModules * 2;
+function drawBarcode(ctx, { modules, quietModules }, centerX, top, maxSize) {
+  const modulesAcross = modules.size + quietModules * 2;
   const modulePixels = Math.max(1, Math.floor(maxSize / modulesAcross));
   const actualSize = modulesAcross * modulePixels;
   const x = Math.round(centerX - actualSize / 2);
 
   ctx.save();
   ctx.fillStyle = "#ffffff";
-  // The four-module QR quiet zone is mandatory for reliable scanning. The
-  // demo does not add another decorative gutter outside it, so the white
-  // plate ends exactly at the standards-compliant quiet zone.
+  // Keep whole-pixel modules and the margin appropriate to the selected format.
   roundedRect(ctx, x, top, actualSize, actualSize, 12);
   ctx.fill();
   ctx.fillStyle = "#000000";
   ctx.imageSmoothingEnabled = false;
 
-  for (let row = 0; row < qr.modules.size; row += 1) {
-    for (let col = 0; col < qr.modules.size; col += 1) {
-      if (!qr.modules.get(row, col)) continue;
+  for (let row = 0; row < modules.size; row += 1) {
+    for (let col = 0; col < modules.size; col += 1) {
+      if (!modules.get(row, col)) continue;
       ctx.fillRect(
         x + (col + quietModules) * modulePixels,
         top + (row + quietModules) * modulePixels,
@@ -143,7 +135,7 @@ function drawQr(ctx, payload, centerX, top, maxSize) {
   ctx.restore();
 }
 
-export function renderBoardingPass(canvas, data, bcbp) {
+export function renderBoardingPass(canvas, data, bcbp, barcode = null) {
   const logo = logoImage;
   const ctx = canvas.getContext("2d", { alpha: false });
   const W = canvas.width;
@@ -214,7 +206,7 @@ export function renderBoardingPass(canvas, data, bcbp) {
   fitText(ctx, data.frequentFlyerTier || "", passengerColumns[2], 626, 125, 43);
   value(ctx, bcbp.normalized.sequence, passengerColumns[3], 626, 43);
 
-  drawQr(ctx, bcbp.payload, W / 2, 1102, 430);
+  if (barcode) drawBarcode(ctx, barcode, W / 2, 1102, 430);
 
   if (logo) {
     ctx.globalAlpha = 0.58;

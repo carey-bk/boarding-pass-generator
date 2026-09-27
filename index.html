@@ -26,6 +26,17 @@
 
         <form id="pass-form" novalidate>
           <fieldset>
+            <legend>条码格式</legend>
+            <label>
+              <span>选择条码</span>
+              <select name="barcodeFormat" required>
+                <option value="qr">QR 二维码</option>
+                <option value="aztec">Aztec 码</option>
+              </select>
+            </label>
+            <p class="barcode-hint">两种格式使用相同的 BCBP 明文，登机牌上的文字信息保持一致。</p>
+          </fieldset>
+          <fieldset>
             <legend>航程</legend>
             <div class="field-grid airport-grid">
               <label>
@@ -168,7 +179,7 @@
       <section class="preview-panel" aria-label="登机牌预览">
         <div class="preview-heading">
           <span>实时预览</span>
-          <span class="status-pill"><i></i>IATA BCBP CORE</span>
+          <span class="status-pill"><i></i><span id="preview-barcode-status" role="status">IATA BCBP · QR VERSION 7</span></span>
         </div>
         <div class="canvas-wrap">
           <canvas id="boarding-pass" width="1206" height="1609">您的浏览器不支持 Canvas。</canvas>

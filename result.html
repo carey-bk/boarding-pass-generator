@@ -22,9 +22,9 @@
           <p class="intro">请确认登机牌内容，然后下载 PNG 图片。</p>
         </div>
         <div class="result-actions">
-          <a class="button-link secondary" href="./index.html">返回修改</a>
-          <button id="result-download" class="primary" type="button">下载 PNG</button>
-          <button id="screenshot-download" class="primary screenshot-button" type="button">下载截图</button>
+          <a id="result-back" class="button-link secondary" href="./index.html">返回修改</a>
+          <button id="result-download" class="primary" type="button" disabled>下载 PNG</button>
+          <button id="screenshot-download" class="primary screenshot-button" type="button" disabled>下载截图</button>
         </div>
       </header>
 
@@ -39,7 +39,7 @@
           <canvas id="result-canvas" width="1206" height="1609">您的浏览器不支持 Canvas。</canvas>
         </div>
         <aside class="result-meta">
-          <span class="status-pill"><i></i>IATA BCBP · QR VERSION 7</span>
+          <span class="status-pill"><i></i><span id="result-barcode-status" role="status">正在生成条码…</span></span>
           <h2 id="result-route"></h2>
           <dl>
             <div><dt>乘机人</dt><dd id="result-passenger"></dd></div>
@@ -50,7 +50,7 @@
           <details class="bcbp-details">
             <summary>查看 BCBP 明文</summary>
             <code id="result-bcbp"></code>
-            <p>二维码固定使用 Version 7，因此具有与 demo 一致的六个可见对齐定位方块。</p>
+            <p id="result-barcode-description"></p>
           </details>
           <p class="legal-note">仅用于设计样机与开发测试，不是有效旅行凭证。</p>
         </aside>

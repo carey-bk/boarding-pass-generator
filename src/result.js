@@ -1,4 +1,5 @@
 import { buildBcbp } from "./bcbp.js";
+import { barcodeFormat, barcodeLabel, createBcbpBarcode } from "./barcode.js";
 import { ensureBoardingPassAssets, renderBoardingPass } from "./boarding-pass.js";
 import { renderIphoneScreenshot } from "./iphone-screenshot.js";
 
@@ -48,10 +49,13 @@ async function initialize() {
     const stored = sessionStorage.getItem(PASS_DATA_KEY);
     if (!stored) throw new Error("请先返回填写航班信息，再点击“生成 PNG”。");
     const data = JSON.parse(stored);
+    const format = barcodeFormat(data.barcodeFormat);
     const bcbp = buildBcbp(data);
     renderBoardingPass(canvas, data, bcbp);
+    const barcode = await createBcbpBarcode(bcbp.payload, format);
+    renderBoardingPass(canvas, data, bcbp, barcode);
     await ensureBoardingPassAssets();
-    renderBoardingPass(canvas, data, bcbp);
+    renderBoardingPass(canvas, data, bcbp, barcode);
     await renderIphoneScreenshot(screenshotCanvas, canvas, data.screenshotTime || "14:37");
 
     document.querySelector("#result-route").textContent = `${bcbp.normalized.fromCode} → ${bcbp.normalized.toCode}`;
@@ -60,14 +64,22 @@ async function initialize() {
     document.querySelector("#result-date").textContent = data.flightDate;
     document.querySelector("#result-time").textContent = data.screenshotTime || "14:37";
     document.querySelector("#result-bcbp").textContent = bcbp.payload.replaceAll(" ", "·");
+    document.querySelector("#result-barcode-status").textContent = `IATA BCBP · ${barcodeLabel(format)}`;
+    document.querySelector("#result-barcode-description").textContent = format === "aztec"
+      ? "Aztec 码与 QR 版本使用完全相同的 BCBP 明文，包括定长字段中的 ASCII 空格。"
+      : "QR 二维码使用 Version 7；切换 Aztec 仅改变条码格式，不改变 BCBP 明文。";
+    document.querySelector("#result-back").href = `./index.html?barcode=${format}`;
+    const suffix = format === "aztec" ? "-aztec" : "";
     downloadButton.addEventListener("click", () => {
-      const filename = `boarding-pass-${data.fromCode}-${data.toCode}.png`.toLowerCase();
+      const filename = `boarding-pass-${data.fromCode}-${data.toCode}${suffix}.png`.toLowerCase();
       downloadCanvas(canvas, filename, downloadButton, "下载 PNG");
     });
     screenshotButton.addEventListener("click", () => {
-      const filename = `iphone-boarding-pass-${data.fromCode}-${data.toCode}.png`.toLowerCase();
+      const filename = `iphone-boarding-pass-${data.fromCode}-${data.toCode}${suffix}.png`.toLowerCase();
       downloadCanvas(screenshotCanvas, filename, screenshotButton, "下载截图");
     });
+    downloadButton.disabled = false;
+    screenshotButton.disabled = false;
   } catch (error) {
     showError(error.message);
   }
