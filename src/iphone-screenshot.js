@@ -1,4 +1,6 @@
 import { DEMO_CORNER_DATA_URL } from "./demo-corner.js";
+import { renderCathayScreenshot } from "./cathay-screenshot.js";
+import { passStyle } from "./pass-style.js";
 
 const SCREEN = { width: 1280, height: 2781 };
 const CARD_SOURCE = { x: 60, y: 48, width: 1086, height: 1508 };
@@ -109,7 +111,8 @@ function drawCard(ctx, boardingCanvas) {
   ctx.restore();
 }
 
-export async function renderIphoneScreenshot(canvas, boardingCanvas, screenshotTime = "15:00") {
+export async function renderIphoneScreenshot(canvas, boardingCanvas, screenshotTime = "15:00", style) {
+  if (passStyle(style) === "cathay") return renderCathayScreenshot(canvas, boardingCanvas, screenshotTime);
   const demoCorner = await loadDemoCorner();
   canvas.width = SCREEN.width;
   canvas.height = SCREEN.height;

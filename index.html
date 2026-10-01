@@ -26,15 +26,28 @@
 
         <form id="pass-form" novalidate>
           <fieldset>
-            <legend>条码格式</legend>
-            <label>
-              <span>选择条码</span>
-              <select name="barcodeFormat" required>
-                <option value="qr">QR 二维码</option>
-                <option value="aztec">Aztec 码</option>
-              </select>
-            </label>
+            <legend>登机牌样式</legend>
+            <div class="field-grid two-columns">
+              <label>
+                <span>票面样式</span>
+                <select name="passStyle" required>
+                  <option value="umetrip">航旅纵横 · 绿色</option>
+                  <option value="cathay">国泰航空 · 白色</option>
+                </select>
+              </label>
+              <label>
+                <span>选择条码</span>
+                <select name="barcodeFormat" required>
+                  <option value="qr">QR 二维码</option>
+                  <option value="aztec">Aztec 码</option>
+                </select>
+              </label>
+            </div>
             <p class="barcode-hint">两种格式使用相同的 BCBP 明文，登机牌上的文字信息保持一致。</p>
+            <div id="cathay-options" class="style-options" hidden>
+              <p class="barcode-hint">切换样式保留填写内容。国泰票面展示航站楼，登机序号仍写入条码、不显示在票面。</p>
+              <button id="cathay-example" class="secondary" type="button">填入国泰示例</button>
+            </div>
           </fieldset>
           <fieldset>
             <legend>航程</legend>
@@ -72,6 +85,10 @@
               <label>
                 <span>登机口</span>
                 <input name="gate" value="123" maxlength="5" />
+              </label>
+              <label id="terminal-field" hidden>
+                <span>航站楼（国泰样式）</span>
+                <input name="terminal" value="1" maxlength="8" />
               </label>
               <label>
                 <span>航班日期</span>
@@ -155,7 +172,7 @@
                 <span>截图时间</span>
                 <input name="screenshotTime" type="time" value="09:00" required />
               </label>
-              <p>仅用于“下载截图”中的 iPhone 状态栏；信号、Wi-Fi 和电量保持固定样式。</p>
+              <p id="screenshot-style-hint">仅用于“下载截图”中的 iPhone 状态栏；其余状态栏图标保持固定样式。</p>
             </div>
           </fieldset>
 
@@ -178,7 +195,7 @@
 
       <section class="preview-panel" aria-label="登机牌预览">
         <div class="preview-heading">
-          <span>实时预览</span>
+          <span id="preview-style-label">实时预览</span>
           <span class="status-pill"><i></i><span id="preview-barcode-status" role="status">IATA BCBP · QR VERSION 7</span></span>
         </div>
         <div class="canvas-wrap">

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import ZXing from "@zxing/library";
 import { buildBcbp } from "../src/bcbp.js";
 import { createBcbpBarcode } from "../src/barcode.js";
+import { CATHAY_EXAMPLE } from "../src/pass-style.js";
 
 // ZXing ships CommonJS: destructure its default export for Node 20/22 as well.
 const {
@@ -38,6 +39,7 @@ function decode(symbol, format) {
 
 for (const [name, data] of [
   ["default passenger", sample],
+  ["Cathay style example", CATHAY_EXAMPLE],
   ["original sample", { ...sample, passengerName: "ZHANG/BOKAI", toCode: "LJG", carrier: "HO", flightNumber: "2275", flightDate: "2025-10-04", seat: "32C", sequence: "140" }],
   ["punctuation and full-width fields", { ...sample, passengerName: "O'NEILL/JEAN-PAUL", carrier: "ABC", flightNumber: "99999", seat: "999Z", sequence: "99999", flightDate: "2024-12-31" }],
 ]) {
