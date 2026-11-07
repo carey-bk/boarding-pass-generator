@@ -52,6 +52,10 @@ Aztec 编码采用 [bwip-js / BWIPP](https://github.com/metafloor/bwip-js)，按
 
 国泰样式只改变显示与截图布局，不改变现有条码编码规则。航站楼、登机时间、登机口与常客信息仅用于票面显示；登机序号仍写入条码，但不在国泰票面上展示。舱位英文名称沿用表单分组，不代表各航空公司的通用订座代码映射。参考图中的个人信息与“已过期”状态不包含在示例中。品牌素材来源见 [素材说明](src/assets/README.md)。
 
+### 开源许可
+
+本项目采用 [MIT License](LICENSE)。
+
 ---
 
 ## English
@@ -95,3 +99,8 @@ This project is intended only for UI design, mockups, and development testing. G
 Aztec uses a lazily loaded [bwip-js / BWIPP](https://github.com/metafloor/bwip-js) encoder. Tests use the independent [ZXing decoder](https://github.com/zxing-js/library) to check that both formats recover the exact original BCBP payload.
 
 The Cathay style does not alter the existing barcode payload rules. Terminal, boarding time, gate, and membership details are visual-only fields. The sequence remains encoded but is not printed on the Cathay pass. English cabin names follow the form's existing groups, not universal airline booking-class mappings. Reference passenger details and the expired-pass state are not included in the sample. See [asset provenance](src/assets/README.md).
+
+### License
+
+This project is licensed under the [MIT License](LICENSE).
+
